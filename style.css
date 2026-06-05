@@ -1,0 +1,578 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Inter', sans-serif;
+}
+
+:root {
+    /* MODO CLARO - Azul Original Ajustado */
+    --bg-grad: linear-gradient(120deg, #cfd9df 0%, #4fa3d1 100%);
+    --card-bg: rgba(255, 255, 255, 0.8); 
+    --container-bg: rgb(255, 255, 255); /* Para a logo */
+    --text-color: #2d3436;
+    --accent-color: #2f4fd6; 
+    --input-bg: #ffffff;
+    --border-color: rgba(0, 0, 0, 0.1);
+}
+
+body.dark-mode {
+    /* MODO ESCURO - Azul Marinho Profundo */
+    --bg-grad: linear-gradient(120deg, #060b19 0%, #101d42 100%);
+    --card-bg: rgba(30, 30, 40, 0.9);
+    --container-bg: rgb(40, 40, 50);
+    --text-color: #dfe6e9;
+    --accent-color: #796fff;
+    --input-bg: #2d2d2d;
+    --border-color: rgba(255, 255, 255, 0.1);
+}
+
+/* BODY */
+body {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centraliza o conjunto todo no meio da tela */
+  padding: 40px; /* Apenas um respiro para telas muito pequenas */
+  gap: 250px; /* Distância fixa e controlada entre a logo e o card */
+  background: var(--bg-grad) fixed;
+  color: var(--text-color);
+  position: relative;
+  overflow-x: hidden; /* Evita scroll horizontal indesejado */
+  overflow-y: hidden; /* Evita scroll vertical indesejado */
+  transition: all 0.5s ease;
+}
+
+/* BOTÃO DE TEMA */
+.theme-btn {
+  background: none;
+  border: none;
+  position: fixed;
+  top: 25px;
+  right: 25px;
+  cursor: pointer;
+  z-index: 1000;
+  transition: transform 0.3s ease;
+}
+
+.theme-btn:hover { transform: scale(1.2); }
+
+/* 1. Remova qualquer cor de 'stroke' que esteja dentro de .theme-btn svg */
+.theme-btn svg {
+  fill: none;
+  transition: stroke 0.3s ease, transform 0.3s ease;
+}
+
+/* 2. COR DA LUA NO MODO CLARO */
+/* O seletor :not(.dark-mode) garante que esta cor só funcione no modo claro */
+body:not(.dark-mode) .moon-icon {
+  stroke: #2b2a29d0 !important; /* Coloque aqui a cor que você deseja para a lua */
+}
+
+/* 3. COR DO SOL NO MODO ESCURO */
+body.dark-mode .sun-icon {
+  stroke: #ffffffc7 !important; /* Cor do sol no modo escuro */
+}
+
+/* 4. REGRAS DE EXIBIÇÃO (Garantindo que um suma e outro apareça) */
+.sun-icon { display: none; }
+.moon-icon { display: block; }
+
+body.dark-mode .sun-icon { display: block; }
+body.dark-mode .moon-icon { display: none; }
+
+/* LINHA ANIMADA */
+.circle-bg {
+  position: absolute;
+  top: 50%; /* Centraliza verticalmente */
+  
+  /* 50% (meio da tela) 
+     + 250px (metade do gap de 500px) 
+     + 95px (para chegar no centro exato da logo) */
+  right: calc(50% + 405px); 
+  
+  transform: translateY(-50%); /* Ajuste fino vertical */
+  
+  width: 6000px; /* Mantemos grande para vazar à esquerda */
+  height: 1500px;
+  z-index: -1;
+  pointer-events: none;
+  display: flex;
+  justify-content: flex-end; /* Garante que o círculo encoste na borda direita da div */
+}
+
+.circle-bg svg {
+  width: 70%;
+  height: 100%;
+}
+
+.circle-bg ellipse {
+  fill: none;
+  stroke: var(--container-bg);
+  stroke-width: 1.5; 
+  stroke-linecap: round;
+
+  /* Perímetro aproximado para animação fluida */
+  stroke-dasharray: 6000;
+  stroke-dashoffset: -6000;
+  
+  cx: 1000; /* Centro horizontal do SVG */
+  cy: 500;  /* Centro vertical do SVG */
+  rx: 980;  /* Quase encostando na borda direita */
+  ry: 480;
+  
+  opacity: 1;
+  transition: stroke 0.5s ease-in-out;
+  animation: drawLine 2.5s ease-in-out forwards;
+  animation-delay: 1s;
+}
+
+@keyframes drawLine {
+  to {
+    stroke-dashoffset: 0;
+    opacity: 1; /* Opacidade sutil */
+  }
+}
+
+/* LOGO */
+.logo-box {
+  background: var(--container-bg);
+  padding: 35px;
+  position: relative;
+  left: -244px;
+  border-radius: 25px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  z-index: 2;
+  opacity: 0;
+  transform: translateY(0) translateX(60px);
+  animation: fadeUp 2.5s ease forwards;
+  transition: background 0.5s ease;
+  flex-shrink: 0; /* Impede que a logo diminua em telas médias */
+}
+
+
+.logo-img { width: 120px; height: auto; }
+
+/* CARD */
+.card {
+    background: var(--card-bg);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--border-color);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+    padding: 40px;
+    border-radius: 25px;
+    margin-left: 0; /* Removido o 300px */
+    width: 100%;
+    max-width: 420px;
+    z-index: 2;
+    opacity: 0;
+    transform: translateY(40px);
+    animation: fadeUp 0.8s ease forwards;
+    animation-delay: 0.3s;
+    transition: background 0.5s ease, border 0.5s ease;
+}
+
+h1 {
+    font-weight: 800;
+    letter-spacing: -1px;
+    background: linear-gradient(90deg, var(--accent-color), #00d2ff);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: 35px;
+    text-align: center;
+}
+
+.label {
+font-size: 14px;
+margin-bottom: 8px;
+}
+
+/* INPUTS */
+.input-row {
+    display: flex;
+    background: var(--input-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+}
+
+.input-row:focus-within {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(47, 79, 214, 0.15);
+}
+
+.input-row input {
+  flex: 1;
+  padding: 12px;
+  border: none;
+  outline: none;
+  background: transparent;
+  color: var(--text-color);
+}
+
+.domain {
+    display: flex;
+    align-items: center;
+    padding: 0 12px;
+    background: var(--border-color); /* Cinza suave */
+    color: var(--text-color);
+    font-size: 13px;
+    font-weight: 600;
+    border-left: 1px solid var(--border-color);
+}
+
+input[type="password"] {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  border: 1px solid var(--border-color);
+  background: var(--input-bg);
+  color: var(--text-color);
+  outline: none;
+}
+
+/* Pequena animação de "negativa" se o campo estiver vazio ou inválido */
+input:invalid {
+  border-color: #ff4d4d;
+}
+
+/* BOTÕES */
+.btn-primary {
+    width: 100%;
+    padding: 14px;
+    background: var(--accent-color);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.1);
+}
+
+.btn-outline {
+    width: 100%;
+    margin-top: 15px;
+    padding: 12px;
+    border: 2px solid var(--accent-color);
+    background: transparent;
+    color: var(--accent-color);
+    border-radius: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.btn-outline:hover {
+    background: var(--accent-color);
+    color: white;
+}
+
+/* =========================================
+   MODAL (ADAPTÁVEL AO TEMA CLARO/ESCURO)
+   ========================================= */
+
+/* Fundo escuro */
+/* Fundo escuro */
+.modal-fundo {
+  display: none; /* O JS mudará para 'flex' e não 'block' */
+  position: fixed; 
+  z-index: 2000; 
+  left: 0;
+  top: 0;
+  width: 100%; /* Use 100% em vez de 100vw para evitar barras de rolagem */
+  height: 100%; 
+  background-color: rgba(0, 0, 0, 0.7); 
+  
+  /* Centralização Real */
+  display: none; /* Inicialmente escondido */
+  align-items: center; 
+  justify-content: center;
+  padding: 20px; /* Respiro para telas pequenas */
+}
+
+/* Caixa principal do modal */
+.modal-conteudo {
+  background-color: var(--input-bg);
+  border-radius: 8px;
+  width: 100%; 
+  max-width: 550px; 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+  overflow: hidden; 
+  position: relative;
+  
+  /* Removido: margin: 5% auto; */
+  margin: 0; /* O Flexbox do pai já centraliza */
+  
+  animation: fadeUp 0.3s ease forwards; 
+}
+
+/* Cabeçalho */
+.modal-header {
+  background-color: var(--accent-color); /* Muda para Azul ou Roxo conforme o tema */
+  color: white;
+  padding: 15px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-header h2 {
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0;
+  background: none; 
+  -webkit-text-fill-color: white;
+  text-align: left;
+}
+
+/* Botão de Fechar (X) */
+.fechar {
+  color: white;
+  font-size: 22px;
+  font-weight: 300;
+  cursor: pointer;
+  transition: opacity 0.3s;
+}
+
+.fechar:hover {
+  opacity: 0.7;
+}
+
+/* Corpo do Modal */
+.modal-body {
+  padding: 25px 30px;
+  color: var(--text-color); /* Texto branco no escuro e cinza no claro */
+  font-size: 13px;
+  line-height: 1.5;
+  text-align: left;
+  max-height: 70vh; 
+  overflow-y: auto;
+}
+
+.modal-body p {
+  margin-bottom: 15px;
+}
+
+.modal-body strong {
+  color: var(--text-color); /* Deixa os negritos acompanharem o tema */
+  font-weight: bold;
+}
+
+.link-roxo {
+  color: var(--accent-color);
+  text-decoration: underline;
+  font-weight: 600;
+}
+
+/* Botão do Modal */
+.btn-modal-azul {
+  /* Transforma o link em um bloco clicável como botão */
+  display: block; 
+  width: 100%;
+  max-width: 300px; /* Ou o tamanho que você preferir */
+  margin: 20px auto 0; /* Centraliza o botão no modal */
+  
+  /* Cores e Fundo */
+  background: var(--accent-color); /* Usa a variável roxa/azul que definimos */
+  color: #ffffff !important; /* Força o texto a ser branco */
+  
+  /* Tipografia */
+  text-decoration: none; /* Remove o sublinhado estranho */
+  text-align: center;
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 1px;
+  
+  /* Espaçamento e Bordas */
+  padding: 15px 25px;
+  border-radius: 10px; /* Estilo cápsula que sugerimos antes */
+  
+  /* Suavidade */
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+}
+
+.btn-modal-azul:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(108, 92, 231, 0.4);
+  filter: brightness(1.1); /* Dá um brilho leve ao passar o mouse */
+  color: #ffffff !important;
+}
+
+/* Ajuste para o modo escuro (opcional) */
+body.dark-mode .btn-modal-azul {
+    background: var(--accent-color);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+}
+
+/* DIVISOR */
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 20px 0;
+  color: var(--text-color);
+  opacity: 0.6;
+}
+
+.divider::before, .divider::after {
+    content: "";
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--border-color), transparent);
+    margin: 0 10px;
+}
+
+/* LINK */
+.link {
+text-align: center;
+}
+.link a {
+color: #2f4fd6;
+text-decoration: none;
+}
+/* MSG */
+#msg {
+margin-top: 10px;
+font-size: 14px;
+text-align: center;
+}
+
+/* ESTILO COLLABORATOR - PREMIUM DARK GLASS */
+body.colab-theme {
+    --bg-grad: linear-gradient(135deg, #060b19 0%, #102a4d 100%);
+    /* Cor da Logo-Box e da Linha (Branco translúcido para o efeito Glass) */
+    --container-bg: rgba(255, 255, 255, 0.1); 
+    --card-bg: rgba(255, 255, 255, 0.05);
+    --text-color: #ffffff;
+    --accent-color: #00d2ff;
+    --input-bg: #ffffff;
+}
+
+body.colab-theme .theme-btn {
+    opacity: 0;
+    pointer-events: none; /* Impede que o botão seja clicado mesmo invisível */
+    transition: opacity 0.5s ease;
+}
+
+/* Sincronizando a linha com a logo-box no modo colaborador */
+body.colab-theme .circle-bg ellipse {
+    stroke: var(--container-bg); /* Mesma cor da caixa */
+    stroke-width: 4;
+    opacity: 1; /* Deixa a linha nítida */
+}
+
+body.colab-theme .logo-box {
+    background: var(--container-bg);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Card de Colaborador */
+.card.colab-mode {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    text-align: left;
+    padding: 45px;
+    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
+}
+
+.area-restrita-tag {
+    color: var(--accent-color);
+    font-size: 11px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    margin-bottom: 8px;
+    display: block;
+    opacity: 0.8;
+}
+
+/* Link Esqueci minha senha para Colaboradores */
+.forgot-password-colab {
+    margin-bottom: 25px;
+    text-align: left;
+}
+
+.forgot-password-colab a {
+    color: var(--accent-color);
+    text-decoration: none;
+    font-size: 13px;
+    font-weight: 500;
+    opacity: 0.8;
+    transition: 0.3s;
+}
+
+.forgot-password-colab a:hover {
+    opacity: 1;
+    text-decoration: underline;
+}
+
+/* Estilo do Card em modo Colab */
+.card.colab-mode {
+    background: var(--card-bg);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 25px 50px rgba(0,0,0,0.4);
+}
+
+/* Inputs que não "gritam" na tela */
+.colab-mode .input-row, 
+.colab-mode input[type="password"] {
+    background: #2d2d2d;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    color: white;
+}
+
+.colab-mode input::placeholder {
+    color: rgba(255, 255, 255, 0.4);
+}
+
+.colab-mode .btn-primary {
+    background: var(--accent-color);
+    color: #000;
+    font-weight: 700;
+    border-radius: 8px;
+    margin-top: 10px;
+    box-shadow: 0 10px 20px rgba(0, 210, 255, 0.2);
+}
+
+.btn-voltar {
+    display: block;
+    text-align: center;
+    margin-top: 25px;
+    color: rgba(255, 255, 255, 0.5);
+    text-decoration: none;
+    font-size: 13px;
+    transition: 0.3s;
+}
+
+.btn-voltar:hover {
+    color: var(--accent-color);
+}
+
+/* ANIMAÇÃO ENTRADA */
+@keyframes fadeUp {
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@media (max-width: 900px) {
+  body { flex-direction: column; justify-content: center; gap: 40px; }
+  .circle-bg { display: none; }
+}
